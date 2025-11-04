@@ -6,7 +6,7 @@
 
 ## Estado General
 - **Iniciado**: 2025-11-04
-- **Fase Actual**: Fase 3 - Aligner (Normalización de Caras)
+- **Fase Actual**: Fase 4 - Embedder (Extracción de Features)
 - **Última Actualización**: 2025-11-04
 
 ---
@@ -98,13 +98,13 @@ python scripts/test_detector.py
 
 ---
 
-## FASE 3: Aligner (Normalización de Caras) ⬜
+## FASE 3: Aligner (Normalización de Caras) ✅
 **Objetivo**: Alinear caras detectadas a formato estándar 112x112.
 
 ### Tareas:
-- [ ] Implementar `app/aligner_fivept.py`
-- [ ] Implementar `app/utils.py` (quality checks: sharpness, etc.)
-- [ ] Crear script de prueba `scripts/test_aligner.py`
+- [x] Implementar `app/aligner_fivept.py`
+- [x] Implementar `app/utils.py` (quality checks: sharpness, etc.)
+- [x] Crear script de prueba `scripts/test_aligner.py`
 
 ### Verificación:
 ```bash
@@ -372,7 +372,14 @@ rm -rf data/test_crops/
   - scripts/test_detector.py: Script de prueba con webcam
   - Detector funciona correctamente con visualización en tiempo real
   - Bounding boxes y 5 landmarks se visualizan correctamente
-- Estado actual: FASE 3 - Aligner (Normalización de Caras)
+- ✅ FASE 3 completada: Aligner (Normalización de caras)
+  - app/utils.py: Utilidades (sharpness, normalization, IoU, etc.)
+  - app/aligner_fivept.py: Alineación con transformación de similitud
+  - scripts/test_aligner.py: Script de prueba con grilla de caras alineadas
+  - Alineación a 112x112 con ArcFace standard positions
+  - Filtro de calidad por sharpness (Laplacian variance)
+  - Tests unitarios con datos sintéticos pasaron
+- Estado actual: FASE 4 - Embedder (Extracción de Features)
 
 ---
 
