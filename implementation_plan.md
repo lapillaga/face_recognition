@@ -6,7 +6,7 @@
 
 ## Estado General
 - **Iniciado**: 2025-11-04
-- **Fase Actual**: Fase 1 - Configuración y Fundamentos
+- **Fase Actual**: Fase 2 - Detector (Primera Funcionalidad Visual)
 - **Última Actualización**: 2025-11-04
 
 ---
@@ -40,14 +40,14 @@ python -c "import app; print('OK')"
 
 ---
 
-## FASE 1: Configuración y Fundamentos ⬜
+## FASE 1: Configuración y Fundamentos ✅
 **Objetivo**: Implementar configuración y tipos base sin lógica de ML.
 
 ### Tareas:
-- [ ] Implementar `app/config.py` (cargar variables de .env)
-- [ ] Implementar `app/logging_config.py` (configuración de logs)
-- [ ] Implementar `app/interfaces.py` (Protocols, dataclasses)
-- [ ] Crear test simple para config
+- [x] Implementar `app/config.py` (cargar variables de .env)
+- [x] Implementar `app/logging_config.py` (configuración de logs)
+- [x] Implementar `app/interfaces.py` (Protocols, dataclasses)
+- [x] Crear .env desde .env.example
 
 ### Verificación:
 ```bash
@@ -55,7 +55,7 @@ python -c "import app; print('OK')"
 cp .env.example .env
 
 # Probar configuración
-python -c "from app.config import Config; c = Config(); print(f'CTX_ID: {c.ctx_id}, THRESH: {c.thresh}')"
+python -c "from app.config import Config; c = Config.from_env(); print(f'CTX_ID: {c.ctx_id}, THRESH: {c.thresh}')"
 
 # Probar logging
 python -c "from app.logging_config import setup_logging; logger = setup_logging('test'); logger.info('Test log')"
@@ -360,7 +360,13 @@ rm -rf data/test_crops/
   - Estructura de directorios creada (app/, scripts/, tests/, data/, models/)
   - Configuración pyproject.toml con ruff, black, pytest
   - Archivo .env.example creado
-- Estado actual: FASE 1 - Configuración y Fundamentos
+- ✅ FASE 1 completada: Configuración y fundamentos
+  - app/config.py: Sistema de configuración con validación
+  - app/logging_config.py: Logging estructurado con colores
+  - app/interfaces.py: Protocols y dataclasses (BBox, Detection, Detector, etc.)
+  - Archivo .env creado desde template
+  - Todos los tests de verificación pasaron
+- Estado actual: FASE 2 - Detector (Primera Funcionalidad Visual)
 
 ---
 
