@@ -6,20 +6,20 @@
 
 ## Estado General
 - **Iniciado**: 2025-11-04
-- **Fase Actual**: Fase 0 - Setup Inicial
+- **Fase Actual**: Fase 1 - Configuración y Fundamentos
 - **Última Actualización**: 2025-11-04
 
 ---
 
-## FASE 0: Setup Inicial y Estructura Base ⬜
+## FASE 0: Setup Inicial y Estructura Base ✅
 **Objetivo**: Preparar el entorno y estructura del proyecto sin código complejo.
 
 ### Tareas:
-- [ ] Actualizar `pyproject.toml` con todas las dependencias
-- [ ] Instalar dependencias con `uv sync`
-- [ ] Crear estructura completa de directorios
-- [ ] Crear `.env.example` con variables de configuración
-- [ ] Crear archivos `__init__.py` vacíos en módulos
+- [x] Actualizar `pyproject.toml` con todas las dependencias
+- [x] Instalar dependencias con `uv sync`
+- [x] Crear estructura completa de directorios
+- [x] Crear `.env.example` con variables de configuración
+- [x] Crear archivos `__init__.py` vacíos en módulos
 
 ### Verificación:
 ```bash
@@ -355,7 +355,12 @@ rm -rf data/test_crops/
 
 ### 2025-11-04
 - ✅ Creado plan de implementación incremental
-- Estado: FASE 0 pendiente
+- ✅ FASE 0 completada: Setup inicial y estructura base
+  - Dependencias instaladas (OpenCV, InsightFace, FAISS, etc.)
+  - Estructura de directorios creada (app/, scripts/, tests/, data/, models/)
+  - Configuración pyproject.toml con ruff, black, pytest
+  - Archivo .env.example creado
+- Estado actual: FASE 1 - Configuración y Fundamentos
 
 ---
 
