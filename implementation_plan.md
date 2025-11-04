@@ -6,7 +6,7 @@
 
 ## Estado General
 - **Iniciado**: 2025-11-04
-- **Fase Actual**: Fase 2 - Detector (Primera Funcionalidad Visual)
+- **Fase Actual**: Fase 3 - Aligner (Normalización de Caras)
 - **Última Actualización**: 2025-11-04
 
 ---
@@ -71,13 +71,13 @@ python -c "from app.interfaces import BBox, Detection; b = BBox(0,0,100,100); pr
 
 ---
 
-## FASE 2: Detector (Primera Funcionalidad Visual) ⬜
+## FASE 2: Detector (Primera Funcionalidad Visual) ✅
 **Objetivo**: Detectar caras en imágenes y mostrar bounding boxes.
 
 ### Tareas:
-- [ ] Implementar `app/detector_scrfd.py`
-- [ ] Implementar `app/overlay.py` (dibujar boxes y landmarks)
-- [ ] Crear script de prueba `scripts/test_detector.py`
+- [x] Implementar `app/detector_scrfd.py`
+- [x] Implementar `app/overlay.py` (dibujar boxes y landmarks)
+- [x] Crear script de prueba `scripts/test_detector.py`
 
 ### Verificación:
 ```bash
@@ -366,7 +366,13 @@ rm -rf data/test_crops/
   - app/interfaces.py: Protocols y dataclasses (BBox, Detection, Detector, etc.)
   - Archivo .env creado desde template
   - Todos los tests de verificación pasaron
-- Estado actual: FASE 2 - Detector (Primera Funcionalidad Visual)
+- ✅ FASE 2 completada: Detector (Primera funcionalidad visual)
+  - app/detector_scrfd.py: Detector SCRFD con InsightFace
+  - app/overlay.py: Utilidades de dibujo (bbox, landmarks, labels, FPS)
+  - scripts/test_detector.py: Script de prueba con webcam
+  - Detector funciona correctamente con visualización en tiempo real
+  - Bounding boxes y 5 landmarks se visualizan correctamente
+- Estado actual: FASE 3 - Aligner (Normalización de Caras)
 
 ---
 
