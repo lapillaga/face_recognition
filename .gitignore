@@ -28,3 +28,8 @@ models/
 # Logs
 logs/
 *.log
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
