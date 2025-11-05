@@ -6,7 +6,7 @@
 
 ## Estado General
 - **Iniciado**: 2025-11-04
-- **Fase Actual**: Fase 4 - Embedder (Extracción de Features)
+- **Fase Actual**: Fase 6 - Enrollment (Registro de Personas)
 - **Última Actualización**: 2025-11-04
 
 ---
@@ -125,12 +125,12 @@ python scripts/test_aligner.py
 
 ---
 
-## FASE 4: Embedder (Extracción de Features) ⬜
+## FASE 4: Embedder (Extracción de Features) ✅
 **Objetivo**: Convertir caras alineadas en vectores de 512 dimensiones.
 
 ### Tareas:
-- [ ] Implementar `app/embedder_arcface.py`
-- [ ] Crear script de prueba `scripts/test_embedder.py`
+- [x] Implementar `app/embedder_arcface.py`
+- [x] Crear script de prueba `scripts/test_embedder.py`
 
 ### Verificación:
 ```bash
@@ -152,13 +152,13 @@ python scripts/test_embedder.py
 
 ---
 
-## FASE 5: Matcher (Búsqueda con FAISS) ⬜
+## FASE 5: Matcher (Búsqueda con FAISS) ✅
 **Objetivo**: Buscar identidades usando índice FAISS.
 
 ### Tareas:
-- [ ] Implementar `app/matcher_faiss.py`
-- [ ] Crear `tests/test_matcher.py`
-- [ ] Crear script de prueba `scripts/test_matcher.py`
+- [x] Implementar `app/matcher_faiss.py`
+- [x] Crear `tests/test_matcher.py`
+- [x] Crear script de prueba `scripts/test_matcher.py`
 
 ### Verificación:
 ```bash
@@ -379,7 +379,20 @@ rm -rf data/test_crops/
   - Alineación a 112x112 con ArcFace standard positions
   - Filtro de calidad por sharpness (Laplacian variance)
   - Tests unitarios con datos sintéticos pasaron
-- Estado actual: FASE 4 - Embedder (Extracción de Features)
+- ✅ FASE 4 completada: Embedder (Extracción de Features)
+  - app/embedder_arcface.py: Extractor ArcFace de embeddings 512-D
+  - scripts/test_embedder.py: Script de prueba con comparación de similitudes
+  - Embeddings normalizados L2 (norm ≈ 1.0)
+  - Permite guardar embeddings con labels y comparar similitudes
+  - Visualización de matriz de similitud con heatmap
+- ✅ FASE 5 completada: Matcher (Búsqueda con FAISS)
+  - app/matcher_faiss.py: Matcher FAISS con IndexFlatIP para cosine similarity
+  - tests/test_matcher.py: 12 tests unitarios (100% passed)
+  - scripts/test_matcher.py: Script de demostración con datos sintéticos
+  - Construcción de índice con centroids por persona
+  - Búsqueda top-k con scores normalizados [0,1]
+  - Persistencia (save/load) de índice y labels
+- Estado actual: FASE 6 - Enrollment (Registro de Personas)
 
 ---
 
