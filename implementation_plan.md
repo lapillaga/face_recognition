@@ -182,19 +182,19 @@ python scripts/test_matcher.py
 
 ---
 
-## FASE 6: Enrollment (Registro de Personas) ⬜
+## FASE 6: Enrollment (Registro de Personas) ✅
 **Objetivo**: Sistema completo para enrollar nuevas personas.
 
 ### Tareas:
-- [ ] Implementar `app/enrollment.py`
-- [ ] Implementar `app/video_io.py` (WebcamSource, VideoFileSource)
-- [ ] Implementar `scripts/capture_enroll.py`
-- [ ] Implementar `scripts/build_index.py`
+- [x] Implementar `app/enrollment.py`
+- [x] Implementar `app/video_io.py` (WebcamSource, VideoFileSource)
+- [x] Implementar `scripts/capture_enroll.py`
+- [x] Implementar `scripts/build_index.py`
 
 ### Verificación:
 ```bash
 # 1. Capturar imágenes de una persona
-python scripts/capture_enroll.py --name LUIS --num-images 15
+uv run python scripts/capture_enroll.py --name LUIS --num-images 15
 
 # Verificar que:
 # - Se crean 15 imágenes en data/enroll/LUIS/
@@ -202,7 +202,7 @@ python scripts/capture_enroll.py --name LUIS --num-images 15
 # - Solo se capturan imágenes con buena calidad
 
 # 2. Construir índice FAISS
-python scripts/build_index.py
+uv run python scripts/build_index.py
 
 # Verificar que:
 # - Se crea models/centroids.faiss
@@ -392,7 +392,16 @@ rm -rf data/test_crops/
   - Construcción de índice con centroids por persona
   - Búsqueda top-k con scores normalizados [0,1]
   - Persistencia (save/load) de índice y labels
-- Estado actual: FASE 6 - Enrollment (Registro de Personas)
+- ✅ FASE 6 completada: Enrollment (Registro de Personas)
+  - app/video_io.py: WebcamSource y VideoFileSource con context managers
+  - app/enrollment.py: EnrollmentService con quality filtering
+  - scripts/capture_enroll.py: CLI para captura interactiva con guía visual
+  - scripts/build_index.py: CLI para construir índice desde enrollment data
+  - tests/test_enrollment.py: 10 tests unitarios (100% passed)
+  - Captura automática con filtros de calidad (sharpness, detection score)
+  - Interfaz interactiva con guide box y preview en tiempo real
+  - Bug fix: delete_person ahora no crea directorios inexistentes
+- Estado actual: FASE 7 - Recognition (Identificación en Tiempo Real)
 
 ---
 
