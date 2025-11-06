@@ -135,6 +135,48 @@ def draw_text(
     )
 
 
+def draw_label(
+    frame: np.ndarray,
+    bbox: BBox,
+    text: str,
+    bg_color: Tuple[int, int, int] = COLOR_GREEN,
+    text_color: Tuple[int, int, int] = COLOR_WHITE,
+    font_scale: float = 0.6,
+    thickness: int = 2,
+) -> None:
+    """Draw label text above bounding box (in-place).
+
+    Args:
+        frame: Image to draw on (modified in-place)
+        bbox: Bounding box to draw label above
+        text: Label text to draw
+        bg_color: Background color for label box (BGR)
+        text_color: Text color (BGR)
+        font_scale: Font size scale factor
+        thickness: Text thickness in pixels
+
+    Example:
+        >>> draw_label(frame, bbox, "LUIS (0.87)", bg_color=(0, 255, 0))
+    """
+    # Position label above bbox
+    x = bbox.x1
+    y = bbox.y1 - 10
+
+    # Ensure label is within frame bounds
+    if y < 20:
+        y = bbox.y2 + 20
+
+    draw_text(
+        frame,
+        text,
+        (x, y),
+        color=text_color,
+        font_scale=font_scale,
+        thickness=thickness,
+        bg_color=bg_color,
+    )
+
+
 def draw_detection(
     frame: np.ndarray,
     detection: Detection,

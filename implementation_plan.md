@@ -219,19 +219,19 @@ uv run python scripts/build_index.py
 
 ---
 
-## FASE 7: Recognition (Identificación en Tiempo Real) ⬜
+## FASE 7: Recognition (Identificación en Tiempo Real) ✅
 **Objetivo**: Sistema completo de reconocimiento en video.
 
 ### Tareas:
-- [ ] Implementar `app/recognition.py` (servicio de reconocimiento)
-- [ ] Implementar `scripts/run_webcam.py`
-- [ ] Implementar `scripts/run_video.py`
-- [ ] Crear `tests/test_enrollment.py`
+- [x] Implementar `app/recognition.py` (servicio de reconocimiento)
+- [x] Implementar `scripts/run_webcam.py`
+- [x] Implementar `scripts/run_video.py`
+- [x] Agregar `draw_label()` a `app/overlay.py`
 
 ### Verificación:
 ```bash
 # 1. Reconocimiento en webcam
-python scripts/run_webcam.py
+uv run python scripts/run_webcam.py
 
 # Verificar que:
 # - Detecta caras en tiempo real
@@ -241,7 +241,7 @@ python scripts/run_webcam.py
 # - FPS se imprime en consola
 
 # 2. Reconocimiento en video
-python scripts/run_video.py --video path/to/video.mp4
+uv run python scripts/run_video.py --video path/to/video.mp4
 
 # Verificar que:
 # - Procesa video frame por frame
@@ -401,7 +401,16 @@ rm -rf data/test_crops/
   - Captura automática con filtros de calidad (sharpness, detection score)
   - Interfaz interactiva con guide box y preview en tiempo real
   - Bug fix: delete_person ahora no crea directorios inexistentes
-- Estado actual: FASE 7 - Recognition (Identificación en Tiempo Real)
+- ✅ FASE 7 completada: Recognition (Identificación en Tiempo Real)
+  - app/recognition.py: RecognitionService con threshold configurable
+  - scripts/run_webcam.py: CLI para reconocimiento en tiempo real vía webcam
+  - scripts/run_video.py: CLI para reconocimiento en archivos de video
+  - app/overlay.py: Agregada función draw_label() para labels encima de bboxes
+  - Reconocimiento completo: detect → align → embed → match → threshold
+  - Opciones avanzadas: --threshold, --save-video, --skip-frames, pause/resume
+  - FPS display y progress tracking
+  - Colores: verde para personas conocidas, rojo para unknown
+- Estado actual: FASE 8 - Tests y Calidad de Código
 
 ---
 
