@@ -6,8 +6,8 @@
 
 ## Estado General
 - **Iniciado**: 2025-11-04
-- **Fase Actual**: Fase 6 - Enrollment (Registro de Personas)
-- **Última Actualización**: 2025-11-04
+- **Fase Actual**: FASE 8 - Implementación Alternativa con face_recognition (dlib)
+- **Última Actualización**: 2025-11-05
 
 ---
 
@@ -257,7 +257,169 @@ uv run python scripts/run_video.py --video path/to/video.mp4
 
 ---
 
-## FASE 8: Tests y Calidad de Código ⬜
+## FASE 8: Implementación Alternativa con face_recognition (dlib) ⬜
+**Objetivo**: Integrar enfoque alternativo de reconocimiento facial usando `face_recognition` (dlib + ResNet-34) para comparar con implementación actual (InsightFace + ArcFace).
+
+### Motivación
+Comparar dos enfoques modernos de reconocimiento facial:
+- **Actual (InsightFace)**: SCRFD detector + ArcFace embeddings 512-D + FAISS
+- **Tutorial (dlib)**: HOG/CNN detector + ResNet-34 embeddings 128-D + Euclidean distance
+
+### Mini-Plan de Integración
+
+#### 8.1. Análisis y Adaptación al Proyecto ⬜
+**Tareas**:
+- [ ] Revisar tutorial completo de PyImageSearch
+- [ ] Identificar componentes reutilizables del proyecto actual
+- [ ] Diseñar arquitectura modular para soportar múltiples "backends"
+
+**Componentes a reutilizar**:
+- `app/video_io.py` - Ya funciona para ambos enfoques
+- `app/overlay.py` - Mismas funciones de dibujo
+- `app/enrollment.py` - Estructura general (adaptar para dlib)
+- `scripts/capture_enroll.py` - Interfaz de captura (cambiar backend)
+- `scripts/run_webcam.py` / `run_video.py` - Scripts principales (modo seleccionable)
+
+**Diseño propuesto**:
+```
+app/
+  backends/
+    __init__.py
+    insightface_backend.py  # Wrappear implementación actual
+    dlib_backend.py          # Nueva implementación con face_recognition
+  interfaces.py              # Agregar BackendProtocol
+```
+
+#### 8.2. Implementación de Backend dlib ⬜
+**Tareas**:
+- [ ] Instalar dependencias: `face-recognition`, `dlib`
+- [ ] Implementar `app/backends/dlib_backend.py`
+  - DlibDetector (HOG o CNN)
+  - DlibEmbedder (128-D ResNet-34)
+  - DlibMatcher (Euclidean distance, no FAISS)
+- [ ] Implementar `app/backends/insightface_backend.py`
+  - Wrappear detector, aligner, embedder, matcher actuales
+  - Interfaz unificada con dlib
+
+**Código de ejemplo**:
+```python
+# app/backends/dlib_backend.py
+import face_recognition
+
+class DlibDetector:
+    def __init__(self, model: str = "hog"):
+        self.model = model  # "hog" or "cnn"
+
+    def detect(self, frame):
+        boxes = face_recognition.face_locations(
+            frame, model=self.model
+        )
+        # Convertir a Detection objects
+        ...
+
+class DlibEmbedder:
+    def embed(self, face_crop):
+        return face_recognition.face_encodings(face_crop)[0]
+
+class DlibMatcher:
+    def __init__(self, tolerance: float = 0.6):
+        self.tolerance = tolerance
+        self.known_encodings = []
+        self.known_labels = []
+
+    def search(self, encoding):
+        distances = face_recognition.face_distance(
+            self.known_encodings, encoding
+        )
+        # Retornar labels y scores...
+```
+
+#### 8.3. Refactorización de Scripts para Multi-Backend ⬜
+**Tareas**:
+- [ ] Agregar argumento `--backend` a todos los scripts
+- [ ] Modificar `scripts/capture_enroll.py` para soportar ambos backends
+- [ ] Modificar `scripts/build_index.py` para soportar ambos backends
+- [ ] Modificar `scripts/run_webcam.py` para soportar ambos backends
+- [ ] Modificar `scripts/run_video.py` para soportar ambos backends
+
+**Uso propuesto**:
+```bash
+# Con backend actual (InsightFace)
+uv run python scripts/run_webcam.py --backend insightface
+
+# Con backend alternativo (dlib)
+uv run python scripts/run_webcam.py --backend dlib
+
+# Con detector HOG (más rápido)
+uv run python scripts/run_webcam.py --backend dlib --detector hog
+
+# Con detector CNN (más preciso)
+uv run python scripts/run_webcam.py --backend dlib --detector cnn
+```
+
+#### 8.4. Comparación y Benchmarking ⬜
+**Tareas**:
+- [ ] Crear `scripts/benchmark_backends.py`
+  - Comparar velocidad (FPS) de ambos backends
+  - Comparar accuracy en dataset de validación
+  - Comparar uso de memoria
+- [ ] Crear `scripts/compare_embeddings.py`
+  - Visualizar diferencias entre embeddings 128-D vs 512-D
+  - Comparar distancias intra-persona vs inter-persona
+  - Analizar separabilidad de clusters
+
+**Métricas a comparar**:
+- ✅ Velocidad de detección (FPS)
+- ✅ Velocidad de embedding extraction
+- ✅ Accuracy en reconocimiento (same person vs different)
+- ✅ Uso de memoria (RAM)
+- ✅ Tamaño de modelos en disco
+- ✅ Facilidad de deployment (dependencias)
+
+#### 8.5. Documentación de Comparación ⬜
+**Tareas**:
+- [ ] Crear `docs/BACKEND_COMPARISON.md`
+  - Tabla comparativa InsightFace vs dlib
+  - Pros/cons de cada enfoque
+  - Recomendaciones de uso según caso
+- [ ] Agregar sección en README sobre backends
+- [ ] Crear ejemplos de uso con ambos backends
+
+### Verificación:
+```bash
+# 1. Enrollment con dlib backend
+uv run python scripts/capture_enroll.py --backend dlib --name LUIS --num-images 15
+uv run python scripts/build_index.py --backend dlib
+
+# 2. Recognition con dlib backend
+uv run python scripts/run_webcam.py --backend dlib
+
+# 3. Comparar backends
+uv run python scripts/benchmark_backends.py --dataset data/val/
+
+# Verificar que:
+# - Ambos backends funcionan correctamente
+# - Se puede cambiar entre backends sin modificar código
+# - Métricas de comparación están documentadas
+```
+
+### Criterio de Éxito:
+- ✅ Backend dlib implementado y funcional
+- ✅ Scripts soportan ambos backends con flag `--backend`
+- ✅ Comparación cuantitativa documentada
+- ✅ Usuario puede elegir backend según necesidades (velocidad vs accuracy)
+- ✅ Código modular permite agregar más backends en el futuro
+
+### Beneficios de esta Fase:
+1. **Educativo**: Comparar dos enfoques state-of-the-art
+2. **Flexibilidad**: Usuario elige según hardware/requisitos
+3. **Portabilidad**: dlib más fácil de instalar en algunos sistemas
+4. **Benchmark**: Datos cuantitativos para decisiones informadas
+5. **Arquitectura limpia**: Patrón Strategy para backends intercambiables
+
+---
+
+## FASE 9: Tests y Calidad de Código ⬜
 **Objetivo**: Asegurar calidad y mantenibilidad del código.
 
 ### Tareas:
@@ -290,7 +452,7 @@ mypy app/
 
 ---
 
-## FASE 9: Documentación Final ⬜
+## FASE 10: Documentación Final ⬜
 **Objetivo**: Documentar uso y deployment del sistema.
 
 ### Tareas:
@@ -410,7 +572,17 @@ rm -rf data/test_crops/
   - Opciones avanzadas: --threshold, --save-video, --skip-frames, pause/resume
   - FPS display y progress tracking
   - Colores: verde para personas conocidas, rojo para unknown
-- Estado actual: FASE 8 - Tests y Calidad de Código
+
+### 2025-11-05
+- ✅ Agregada FASE 8: Implementación Alternativa con face_recognition (dlib)
+  - Mini-plan de 5 subfases para integrar tutorial de PyImageSearch
+  - Diseño de arquitectura multi-backend (Strategy pattern)
+  - Reutilización de componentes existentes (video_io, overlay, scripts)
+  - Comparación InsightFace (512-D FAISS) vs dlib (128-D Euclidean)
+  - Benchmarking: FPS, accuracy, memoria, deployment
+  - Objetivo: Sistema modular con backends intercambiables
+- Fases renumeradas: antigua FASE 8 → FASE 9, antigua FASE 9 → FASE 10
+- Estado actual: FASE 8 - Implementación Alternativa con dlib
 
 ---
 
