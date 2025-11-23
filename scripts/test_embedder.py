@@ -443,7 +443,7 @@ def main() -> None:
                                 else:
                                     logger.info(
                                         f"Inter-person similarity {labels[i]}-{labels[j]}: "
-                                        f"{sim:.4f} ✓"
+                                        f"{sim:.4f} OK"
                                     )
 
                 else:

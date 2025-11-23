@@ -150,7 +150,7 @@ def main() -> None:
         images_per_person = load_enrollment_images(enroll_dir)
     except (FileNotFoundError, ValueError) as e:
         logger.error(str(e))
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         print()
         print("Troubleshooting:")
         print("  - Run 'python scripts/capture_enroll.py --name YOURNAME' first")
@@ -172,13 +172,13 @@ def main() -> None:
 
     if not images_per_person:
         logger.error("No persons with sufficient images")
-        print(f"❌ Error: No persons have at least {args.min_images} images")
+        print(f"Error: No persons have at least {args.min_images} images")
         print()
         print("Please capture more images:")
         print("  python scripts/capture_enroll.py --name YOURNAME --num-images 15")
         return
 
-    print(f"✓ Loaded images for {len(images_per_person)} persons:")
+    print(f"Loaded images for {len(images_per_person)} persons:")
     total_images = 0
     for person_name, images in images_per_person.items():
         print(f"  - {person_name:15s}: {len(images):3d} images")
@@ -189,7 +189,7 @@ def main() -> None:
     print_section("Step 2: Initializing ArcFace Embedder")
 
     embedder = ArcFaceEmbedder(config)
-    print(f"✓ Embedder loaded: {embedder}")
+    print(f"Embedder loaded: {embedder}")
 
     # Step 3: Extract embeddings
     print_section("Step 3: Extracting Embeddings")
@@ -232,10 +232,10 @@ def main() -> None:
 
     if not embeddings_per_person:
         logger.error("No embeddings extracted")
-        print("❌ Error: Failed to extract embeddings")
+        print("Error: Failed to extract embeddings")
         return
 
-    print(f"✓ Extracted embeddings for {len(embeddings_per_person)} persons")
+    print(f"Extracted embeddings for {len(embeddings_per_person)} persons")
 
     # Step 4: Build FAISS index
     print_section("Step 4: Building FAISS Index")
@@ -244,11 +244,11 @@ def main() -> None:
 
     for person_name, embeddings in embeddings_per_person.items():
         matcher.add(person_name, embeddings)
-        print(f"✓ Added '{person_name}': {embeddings.shape[0]} embeddings")
+        print(f"Added '{person_name}': {embeddings.shape[0]} embeddings")
 
     print("Building index...")
     matcher.build()
-    print(f"✓ FAISS index built: {matcher.index.ntotal} centroids")
+    print(f"FAISS index built: {matcher.index.ntotal} centroids")
 
     # Step 5: Save index
     print_section("Step 5: Saving FAISS Index")
@@ -262,9 +262,9 @@ def main() -> None:
 
     matcher.save(index_path, labels_path, stats_path)
 
-    print(f"✓ Saved FAISS index to {index_path}")
-    print(f"✓ Saved labels to {labels_path}")
-    print(f"✓ Saved stats to {stats_path}")
+    print(f"Saved FAISS index to {index_path}")
+    print(f"Saved labels to {labels_path}")
+    print(f"Saved stats to {stats_path}")
 
     # Summary
     print_section("Index Built Successfully")
@@ -273,7 +273,7 @@ def main() -> None:
     print(f"Centroids in index:  {matcher.index.ntotal}")
     print(f"Embedding dimension: {matcher.dimension}")
     print()
-    print("✅ You can now run face recognition:")
+    print("You can now run face recognition:")
     print("   python scripts/run_webcam.py")
     print("   python scripts/run_video.py --video path/to/video.mp4")
     print()

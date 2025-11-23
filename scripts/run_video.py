@@ -123,7 +123,7 @@ def main() -> None:
 
     if not index_path.exists() or not labels_path.exists():
         logger.error(f"FAISS index not found in {models_dir}")
-        print(f"❌ Error: FAISS index not found")
+        print("Error: FAISS index not found")
         print()
         print("Please build the index first:")
         print("  1. Capture enrollment images:")
@@ -134,20 +134,20 @@ def main() -> None:
 
     print("Loading detector (SCRFD)...")
     detector = SCRFDDetector(config)
-    print(f"✓ Detector loaded")
+    print("Detector loaded")
 
     print("Loading aligner (5-point)...")
     aligner = FivePointAligner()
-    print(f"✓ Aligner loaded")
+    print("Aligner loaded")
 
     print("Loading embedder (ArcFace)...")
     embedder = ArcFaceEmbedder(config)
-    print(f"✓ Embedder loaded")
+    print("Embedder loaded")
 
     print("Loading FAISS index...")
     matcher = FaissMatcher(dimension=512)
     matcher.load(index_path, labels_path)
-    print(f"✓ FAISS index loaded: {len(matcher.labels)} persons enrolled")
+    print(f"FAISS index loaded: {len(matcher.labels)} persons enrolled")
     print(f"  Enrolled persons: {', '.join(matcher.labels)}")
 
     # Step 2: Initialize recognition service
@@ -160,19 +160,19 @@ def main() -> None:
         matcher=matcher,
         threshold=threshold,
     )
-    print(f"✓ Recognition service initialized")
+    print("Recognition service initialized")
 
     # Step 3: Open video file
     print_section("Step 3: Opening Video File")
 
     try:
         source = VideoFileSource(args.video)
-        print(f"✓ Video opened: {source}")
+        print(f"Video opened: {source}")
         print(f"  Total frames: {source.frame_count}")
         print(f"  Duration: {source.frame_count / source.fps:.1f}s")
     except (FileNotFoundError, RuntimeError) as e:
         logger.error(f"Failed to open video: {e}")
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         print()
         print("Troubleshooting:")
         print("  - Check if video file exists")
@@ -194,7 +194,7 @@ def main() -> None:
                 (w, h),
             )
             logger.info(f"Saving output to {args.output}")
-            print(f"✓ Output video writer initialized")
+            print("Output video writer initialized")
             # Reset to beginning
             source.seek(0)
 

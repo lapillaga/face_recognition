@@ -102,7 +102,7 @@ def main() -> None:
         seed=42,
     )
 
-    print(f"✓ Created embeddings for {len(persons)} persons")
+    print(f"Created embeddings for {len(persons)} persons")
     for name, embs in persons.items():
         print(f"  - {name}: {embs.shape[0]} embeddings")
 
@@ -113,39 +113,39 @@ def main() -> None:
 
     for name, embs in persons.items():
         matcher.add(name, embs)
-        print(f"✓ Added {name}: {embs.shape[0]} embeddings")
+        print(f"Added {name}: {embs.shape[0]} embeddings")
 
     matcher.build()
-    print(f"✓ FAISS index built: {matcher.index.ntotal} centroids")
+    print(f"FAISS index built: {matcher.index.ntotal} centroids")
 
     # Step 3: Test queries
     print_section("Step 3: Testing Queries")
 
-    print("\n🔍 Query 1: LUIS-like embedding (should match LUIS)")
+    print("\nQuery Query 1: LUIS-like embedding (should match LUIS)")
     query1 = persons["LUIS"][0]  # First embedding from LUIS
     labels1, scores1 = matcher.search(query1, topk=3)
 
     print("   Top 3 matches:")
     for i, (label, score) in enumerate(zip(labels1, scores1), 1):
-        indicator = "✅" if i == 1 and label == "LUIS" else "  "
+        indicator = "*" if i == 1 and label == "LUIS" else "  "
         print(f"   {indicator} {i}. {label:10s} - Score: {score:.4f}")
 
-    print("\n🔍 Query 2: MARIA-like embedding (should match MARIA)")
+    print("\nQuery Query 2: MARIA-like embedding (should match MARIA)")
     query2 = persons["MARIA"][0]
     labels2, scores2 = matcher.search(query2, topk=3)
 
     print("   Top 3 matches:")
     for i, (label, score) in enumerate(zip(labels2, scores2), 1):
-        indicator = "✅" if i == 1 and label == "MARIA" else "  "
+        indicator = "*" if i == 1 and label == "MARIA" else "  "
         print(f"   {indicator} {i}. {label:10s} - Score: {score:.4f}")
 
-    print("\n🔍 Query 3: CARLOS-like embedding (should match CARLOS)")
+    print("\nQuery Query 3: CARLOS-like embedding (should match CARLOS)")
     query3 = persons["CARLOS"][0]
     labels3, scores3 = matcher.search(query3, topk=3)
 
     print("   Top 3 matches:")
     for i, (label, score) in enumerate(zip(labels3, scores3), 1):
-        indicator = "✅" if i == 1 and label == "CARLOS" else "  "
+        indicator = "*" if i == 1 and label == "CARLOS" else "  "
         print(f"   {indicator} {i}. {label:10s} - Score: {score:.4f}")
 
     # Step 4: Test centroid stability
@@ -174,11 +174,11 @@ def main() -> None:
         print(f"  Max similarity:                 {np.max(similarities):.4f}")
 
         if avg_sim > 0.95:
-            print(f"  ✅ Excellent centroid stability (>{0.95:.2f})")
+            print(f"  Excellent centroid stability (>{0.95:.2f})")
         elif avg_sim > 0.90:
-            print(f"  ✅ Good centroid stability (>{0.90:.2f})")
+            print(f"  Good centroid stability (>{0.90:.2f})")
         else:
-            print(f"  ⚠️  Low centroid stability (<{0.90:.2f})")
+            print(f"  WARNING: Low centroid stability (<{0.90:.2f})")
 
         print()
 
@@ -194,17 +194,17 @@ def main() -> None:
 
     # Save
     matcher.save(index_path, labels_path, stats_path)
-    print(f"✓ Saved index to {index_path}")
-    print(f"✓ Saved labels to {labels_path}")
-    print(f"✓ Saved stats to {stats_path}")
+    print(f"Saved index to {index_path}")
+    print(f"Saved labels to {labels_path}")
+    print(f"Saved stats to {stats_path}")
 
     # Load into new matcher
     matcher2 = FaissMatcher(dimension=512)
     matcher2.load(index_path, labels_path)
-    print(f"✓ Loaded index from {index_path}")
+    print(f"Loaded index from {index_path}")
 
     # Verify same results
-    print("\n🔍 Verifying loaded matcher produces same results...")
+    print("\nQuery Verifying loaded matcher produces same results...")
     labels_new, scores_new = matcher2.search(query1, topk=3)
 
     print("   Original matcher:")
@@ -217,9 +217,9 @@ def main() -> None:
 
     # Check if results match
     if labels1 == labels_new and np.allclose(scores1, scores_new, atol=1e-6):
-        print("   ✅ Results match perfectly!")
+        print("   Results match perfectly!")
     else:
-        print("   ❌ Results don't match (unexpected)")
+        print("   Results don't match (unexpected)")
 
     # Step 6: Summary statistics
     print_section("Step 6: Summary Statistics")
@@ -232,7 +232,7 @@ def main() -> None:
     print()
 
     # Cleanup test files
-    print("🗑️  Cleaning up test files...")
+    print("Cleaning up test files...")
     if index_path.exists():
         index_path.unlink()
         print(f"   Deleted {index_path}")
@@ -243,7 +243,7 @@ def main() -> None:
         stats_path.unlink()
         print(f"   Deleted {stats_path}")
 
-    print_section("✅ All Tests Passed!")
+    print_section("All Tests Passed!")
 
     print()
     logger.info("FAISS matcher test completed successfully")

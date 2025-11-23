@@ -115,7 +115,7 @@ def main() -> None:
 
     if not index_path.exists() or not labels_path.exists():
         logger.error(f"FAISS index not found in {models_dir}")
-        print(f"❌ Error: FAISS index not found")
+        print("Error: FAISS index not found")
         print()
         print("Please build the index first:")
         print("  1. Capture enrollment images:")
@@ -126,20 +126,20 @@ def main() -> None:
 
     print("Loading detector (SCRFD)...")
     detector = SCRFDDetector(config)
-    print(f"✓ Detector loaded")
+    print("Detector loaded")
 
     print("Loading aligner (5-point)...")
     aligner = FivePointAligner()
-    print(f"✓ Aligner loaded")
+    print("Aligner loaded")
 
     print("Loading embedder (ArcFace)...")
     embedder = ArcFaceEmbedder(config)
-    print(f"✓ Embedder loaded")
+    print("Embedder loaded")
 
     print("Loading FAISS index...")
     matcher = FaissMatcher(dimension=512)
     matcher.load(index_path, labels_path)
-    print(f"✓ FAISS index loaded: {len(matcher.labels)} persons enrolled")
+    print(f"FAISS index loaded: {len(matcher.labels)} persons enrolled")
     print(f"  Enrolled persons: {', '.join(matcher.labels)}")
 
     # Step 2: Initialize recognition service
@@ -152,17 +152,17 @@ def main() -> None:
         matcher=matcher,
         threshold=threshold,
     )
-    print(f"✓ Recognition service initialized")
+    print("Recognition service initialized")
 
     # Step 3: Open webcam
     print_section("Step 3: Opening Webcam")
 
     try:
         source = WebcamSource(camera_id=args.camera)
-        print(f"✓ Webcam opened: {source}")
+        print(f"Webcam opened: {source}")
     except RuntimeError as e:
         logger.error(f"Failed to open webcam: {e}")
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         print()
         print("Troubleshooting:")
         print("  - Check if camera is connected")
@@ -184,7 +184,7 @@ def main() -> None:
                 (w, h),
             )
             logger.info(f"Saving video to {args.save_video}")
-            print(f"✓ Saving output to {args.save_video}")
+            print(f"Saving output to {args.save_video}")
 
     # Step 4: Run recognition loop
     print_section("Step 4: Running Recognition")

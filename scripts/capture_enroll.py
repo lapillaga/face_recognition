@@ -117,11 +117,11 @@ def main() -> None:
 
     print("Loading detector (SCRFD)...")
     detector = SCRFDDetector(config)
-    print(f"✓ Detector loaded: {detector}")
+    print(f"Detector loaded: {detector}")
 
     print("Loading aligner (5-point)...")
     aligner = FivePointAligner()
-    print(f"✓ Aligner loaded: {aligner}")
+    print(f"Aligner loaded: {aligner}")
 
     # Initialize enrollment service
     print("Initializing enrollment service...")
@@ -132,13 +132,13 @@ def main() -> None:
         min_sharpness=args.min_sharpness,
         min_detection_score=args.min_detection_score,
     )
-    print(f"✓ Service initialized: {service}")
+    print(f"Service initialized: {service}")
 
     # Check if person already has enrolled images
     existing_count = service.count_enrolled_images(args.name)
     if existing_count > 0:
         print()
-        print(f"⚠️  Person '{args.name.upper()}' already has {existing_count} enrolled images")
+        print(f"WARNING: Person '{args.name.upper()}' already has {existing_count} enrolled images")
         response = input("Do you want to add more images? (y/N): ").strip().lower()
         if response != "y":
             print("Enrollment cancelled")
@@ -148,10 +148,10 @@ def main() -> None:
     print_section("Opening Webcam")
     try:
         source = WebcamSource(camera_id=args.camera)
-        print(f"✓ Webcam opened: {source}")
+        print(f"Webcam opened: {source}")
     except RuntimeError as e:
         logger.error(f"Failed to open webcam: {e}")
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         print()
         print("Troubleshooting:")
         print("  - Check if camera is connected")
@@ -188,16 +188,16 @@ def main() -> None:
     # Summary
     print_section("Enrollment Complete")
     total_images = service.count_enrolled_images(args.name)
-    print(f"✓ Captured {num_captured} new images")
-    print(f"✓ Total images for '{args.name.upper()}': {total_images}")
-    print(f"✓ Images saved to: {Path(args.save_dir) / args.name.upper()}")
+    print(f"Captured {num_captured} new images")
+    print(f"Total images for '{args.name.upper()}': {total_images}")
+    print(f"Images saved to: {Path(args.save_dir) / args.name.upper()}")
     print()
 
     if total_images < 10:
-        print("⚠️  Warning: Less than 10 images. Recommend capturing at least 12-15 images.")
+        print("WARNING: Warning: Less than 10 images. Recommend capturing at least 12-15 images.")
         print("   Run this script again to add more images.")
     else:
-        print("✅ Good! You can now build the FAISS index:")
+        print("Good! You can now build the FAISS index:")
         print("   python scripts/build_index.py")
     print()
 
