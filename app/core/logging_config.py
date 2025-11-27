@@ -70,7 +70,7 @@ def setup_logging(
     # Determine log level
     if level is None:
         try:
-            from app.config import get_config
+            from app.core.config import get_config
 
             level = get_config().log_level
         except Exception:

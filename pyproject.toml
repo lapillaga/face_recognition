@@ -11,6 +11,11 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "numpy>=1.24.0",
     "onnxruntime>=1.16.0",
+    # dlib backend (PyImageSearch tutorial)
+    "face-recognition>=1.3.0",
+    "imutils>=0.5.4",
+    "face-recognition-models",
+    "setuptools>=80.9.0",
 ]
 
 [project.optional-dependencies]
@@ -73,3 +78,6 @@ addopts = [
     "--cov-report=term-missing",
     "--cov-report=html",
 ]
+
+[tool.uv.sources]
+face-recognition-models = { git = "https://github.com/ageitgey/face_recognition_models" }

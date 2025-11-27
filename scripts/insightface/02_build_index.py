@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""CLI script for building FAISS index from enrollment images.
+"""CLI script for building FAISS index from enrollment images (InsightFace).
 
 This script loads all aligned face images from data/enroll/, extracts
-embeddings using ArcFace, and builds a FAISS index for recognition.
+ArcFace embeddings (512-D), and builds a FAISS index for recognition.
+
+NOTE: This script is for InsightFace workflow only. For dlib/face_recognition,
+use encode_faces.py which follows the PyImageSearch tutorial approach
+(processes raw images and saves embeddings directly to pickle).
 
 Usage:
     python scripts/build_index.py
@@ -21,10 +25,9 @@ import numpy as np
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.config import Config
-from app.embedder_arcface import ArcFaceEmbedder
-from app.logging_config import setup_logging
-from app.matcher_faiss import FaissMatcher
+from app.backends import create_backend, get_model_paths
+from app.core.config import Config
+from app.core.logging_config import setup_logging
 
 logger = setup_logging(__name__)
 
@@ -131,10 +134,12 @@ def main() -> None:
     """Main function."""
     args = parse_args()
 
-    print_section("FAISS Index Builder - Build from Enrollment Images")
+    print_section("FAISS Index Builder (InsightFace)")
     print(f"Enrollment dir:    {args.enroll_dir}")
     print(f"Models dir:        {args.models_dir}")
     print(f"Min images/person: {args.min_images}")
+    print()
+    print("NOTE: For dlib/face_recognition, use encode_faces.py instead.")
     print()
 
     # Load config
@@ -185,11 +190,15 @@ def main() -> None:
         total_images += len(images)
     print(f"  {'Total':15s}: {total_images:3d} images")
 
-    # Step 2: Initialize embedder
-    print_section("Step 2: Initializing ArcFace Embedder")
+    # Step 2: Initialize InsightFace backend
+    print_section("Step 2: Initializing InsightFace Backend")
 
-    embedder = ArcFaceEmbedder(config)
+    components = create_backend(backend_type="insightface", config=config)
+    embedder = components.embedder
+    matcher = components.matcher
     print(f"Embedder loaded: {embedder}")
+    print(f"Matcher loaded: {matcher}")
+    print(f"Embedding dimension: {components.embedding_dim}")
 
     # Step 3: Extract embeddings
     print_section("Step 3: Extracting Embeddings")
@@ -214,7 +223,7 @@ def main() -> None:
             logger.error(f"No embeddings extracted for '{person_name}', skipping")
             continue
 
-        # Stack into array [N, 512]
+        # Stack into array [N, embedding_dim]
         embeddings_array = np.stack(embeddings, axis=0)
         embeddings_per_person[person_name] = embeddings_array
 
@@ -240,45 +249,41 @@ def main() -> None:
     # Step 4: Build FAISS index
     print_section("Step 4: Building FAISS Index")
 
-    matcher = FaissMatcher(dimension=512)
-
     for person_name, embeddings in embeddings_per_person.items():
         matcher.add(person_name, embeddings)
         print(f"Added '{person_name}': {embeddings.shape[0]} embeddings")
 
     print("Building index...")
     matcher.build()
-    print(f"FAISS index built: {matcher.index.ntotal} centroids")
+    print("Index built successfully")
 
     # Step 5: Save index
-    print_section("Step 5: Saving FAISS Index")
+    print_section("Step 5: Saving Index")
 
     models_dir = Path(args.models_dir)
     models_dir.mkdir(parents=True, exist_ok=True)
 
-    index_path = models_dir / "centroids.faiss"
-    labels_path = models_dir / "labels.json"
-    stats_path = models_dir / "stats.pkl"
+    # Get InsightFace paths
+    paths = get_model_paths("insightface", models_dir)
 
-    matcher.save(index_path, labels_path, stats_path)
+    matcher.save(paths["index"], paths["labels"], paths["stats"])
 
-    print(f"Saved FAISS index to {index_path}")
-    print(f"Saved labels to {labels_path}")
-    print(f"Saved stats to {stats_path}")
+    print(f"Saved index to {paths['index']}")
+    print(f"Saved labels to {paths['labels']}")
+    print(f"Saved stats to {paths['stats']}")
 
     # Summary
     print_section("Index Built Successfully")
-    print(f"Persons enrolled:    {len(matcher.labels)}")
+    print(f"Persons enrolled:    {len(set(matcher.labels))}")
     print(f"Total embeddings:    {sum(len(e) for e in embeddings_per_person.values())}")
-    print(f"Centroids in index:  {matcher.index.ntotal}")
-    print(f"Embedding dimension: {matcher.dimension}")
+    print(f"Embedding dimension: {components.embedding_dim}")
     print()
     print("You can now run face recognition:")
     print("   python scripts/run_webcam.py")
     print("   python scripts/run_video.py --video path/to/video.mp4")
     print()
 
-    logger.info("FAISS index built successfully")
+    logger.info("InsightFace FAISS index built successfully")
 
 
 if __name__ == "__main__":

@@ -12,9 +12,9 @@ from typing import Optional
 import cv2
 import numpy as np
 
-from app.interfaces import Aligner, Detector, VideoSource
-from app.logging_config import get_logger
-from app.utils import compute_sharpness
+from app.core.interfaces import Aligner, Detector, VideoSource
+from app.core.logging_config import get_logger
+from app.core.utils import compute_sharpness
 
 logger = get_logger(__name__)
 

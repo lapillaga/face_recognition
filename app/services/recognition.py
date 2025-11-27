@@ -2,17 +2,21 @@
 
 This module provides the main recognition service that combines detection,
 alignment, embedding, and matching to identify faces in real-time.
+
+Supports two workflows:
+1. InsightFace: detect → align (5-point) → embed → match (FAISS)
+2. dlib: detect → crop bbox → embed → match (Euclidean distance)
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
-from app.interfaces import Aligner, Detector, Embedder, Matcher, BBox
-from app.logging_config import get_logger
+from app.core.interfaces import Aligner, Detector, Embedder, Matcher, BBox
+from app.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -85,7 +89,7 @@ class RecognitionService:
     def __init__(
         self,
         detector: Detector,
-        aligner: Aligner,
+        aligner: Optional[Aligner],
         embedder: Embedder,
         matcher: Matcher,
         threshold: float = 0.35,
@@ -94,9 +98,9 @@ class RecognitionService:
 
         Args:
             detector: Face detector instance
-            aligner: Face aligner instance
+            aligner: Face aligner instance (None for dlib backend)
             embedder: Embedding extractor instance
-            matcher: FAISS matcher instance (must be built)
+            matcher: Matcher instance (FAISS or dlib)
             threshold: Similarity threshold for positive identification (0.0 to 1.0)
 
         Raises:
@@ -111,8 +115,12 @@ class RecognitionService:
         self.matcher = matcher
         self.threshold = threshold
 
+        # Determine workflow based on aligner presence
+        self._use_alignment = aligner is not None
+
         logger.info(
-            f"Initialized RecognitionService with threshold={threshold:.2f}"
+            f"Initialized RecognitionService with threshold={threshold:.2f}, "
+            f"workflow={'alignment' if self._use_alignment else 'crop-based'}"
         )
 
     def recognize(self, frame: np.ndarray) -> List[RecognitionResult]:
@@ -147,28 +155,38 @@ class RecognitionService:
 
         # Step 2-5: Process each detected face
         for i, detection in enumerate(detections):
-            # Check if landmarks are available
-            if detection.kps is None:
-                logger.warning(
-                    f"Detection {i} has no landmarks, skipping recognition"
-                )
-                # Add unknown result with bbox
-                results.append(
-                    RecognitionResult(
-                        bbox=detection.bbox,
-                        label="unknown",
-                        score=0.0,
-                        is_known=False,
-                    )
-                )
-                continue
-
             try:
-                # Step 2: Align face
-                aligned = self.aligner.align(frame, detection.kps)
+                # Get face image based on workflow
+                if self._use_alignment:
+                    # InsightFace workflow: use landmarks for alignment
+                    if detection.kps is None:
+                        logger.warning(
+                            f"Detection {i} has no landmarks, skipping"
+                        )
+                        results.append(
+                            RecognitionResult(
+                                bbox=detection.bbox,
+                                label="unknown",
+                                score=0.0,
+                                is_known=False,
+                            )
+                        )
+                        continue
+                    # Align face using 5-point landmarks
+                    face_image = self.aligner.align(frame, detection.kps)
+                else:
+                    # dlib workflow: crop face region from bbox
+                    bbox = detection.bbox
+                    h, w = frame.shape[:2]
+                    # Clamp bbox to image bounds
+                    x1 = max(0, bbox.x1)
+                    y1 = max(0, bbox.y1)
+                    x2 = min(w, bbox.x2)
+                    y2 = min(h, bbox.y2)
+                    face_image = frame[y1:y2, x1:x2]
 
                 # Step 3: Extract embedding
-                embedding = self.embedder.embed(aligned)
+                embedding = self.embedder.embed(face_image)
 
                 # Step 4: Search in index
                 labels, scores = self.matcher.search(embedding, topk=1)

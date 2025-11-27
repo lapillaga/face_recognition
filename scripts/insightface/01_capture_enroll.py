@@ -4,6 +4,12 @@
 This script provides an interactive way to capture face images
 for enrolling new persons into the face recognition system.
 
+Uses InsightFace backend (SCRFD detector + 5-point alignment) to capture
+high-quality aligned face crops (112x112) for later embedding extraction.
+
+NOTE: This script is for InsightFace workflow only. For dlib/face_recognition,
+use encode_faces.py which follows the PyImageSearch tutorial approach.
+
 Usage:
     python scripts/capture_enroll.py --name LUIS --num-images 15
     python scripts/capture_enroll.py --name MARIA --num-images 20 --camera 1
@@ -18,12 +24,11 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.aligner_fivept import FivePointAligner
-from app.config import Config
-from app.detector_scrfd import SCRFDDetector
-from app.enrollment import EnrollmentService
-from app.logging_config import setup_logging
-from app.video_io import WebcamSource
+from app.backends import create_backend
+from app.core.config import Config
+from app.services.enrollment import EnrollmentService
+from app.core.logging_config import setup_logging
+from app.core.video_io import WebcamSource
 
 logger = setup_logging(__name__)
 
@@ -98,7 +103,7 @@ def main() -> None:
     """Main function."""
     args = parse_args()
 
-    print_section("Face Enrollment - Capture Images")
+    print_section("Face Enrollment - Capture Images (InsightFace)")
     print(f"Person name:       {args.name.upper()}")
     print(f"Target images:     {args.num_images}")
     print(f"Camera ID:         {args.camera}")
@@ -107,27 +112,29 @@ def main() -> None:
     print(f"Min score:         {args.min_detection_score}")
     print(f"Display:           {'No (headless)' if args.no_display else 'Yes'}")
     print()
+    print("NOTE: For dlib/face_recognition, use encode_faces.py instead.")
+    print()
 
     # Load config
     config = Config.from_env()
     logger.info(f"Loaded config: ctx_id={config.ctx_id}")
 
-    # Initialize components
+    # Initialize components using InsightFace backend
     print_section("Initializing Components")
 
-    print("Loading detector (SCRFD)...")
-    detector = SCRFDDetector(config)
-    print(f"Detector loaded: {detector}")
-
-    print("Loading aligner (5-point)...")
-    aligner = FivePointAligner()
-    print(f"Aligner loaded: {aligner}")
+    print("Creating InsightFace backend...")
+    components = create_backend(
+        backend_type="insightface",
+        config=config,
+    )
+    print(f"Detector loaded: {components.detector}")
+    print(f"Aligner loaded: {components.aligner}")
 
     # Initialize enrollment service
     print("Initializing enrollment service...")
     service = EnrollmentService(
-        detector=detector,
-        aligner=aligner,
+        detector=components.detector,
+        aligner=components.aligner,
         save_dir=args.save_dir,
         min_sharpness=args.min_sharpness,
         min_detection_score=args.min_detection_score,

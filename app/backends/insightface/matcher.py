@@ -14,7 +14,7 @@ from typing import List, Tuple
 import faiss
 import numpy as np
 
-from app.logging_config import get_logger
+from app.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 

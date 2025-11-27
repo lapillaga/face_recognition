@@ -25,12 +25,12 @@ import numpy as np
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.aligner_fivept import FivePointAligner
-from app.config import get_config
-from app.detector_scrfd import SCRFDDetector
-from app.logging_config import setup_logging
-from app.overlay import draw_detections, draw_fps, draw_info_panel, draw_text
-from app.utils import compute_sharpness, is_sharp_enough
+from app.backends.insightface.aligner import FivePointAligner
+from app.core.config import get_config
+from app.backends.insightface.detector import SCRFDDetector
+from app.core.logging_config import setup_logging
+from app.core.overlay import draw_detections, draw_fps, draw_info_panel, draw_text
+from app.core.utils import compute_sharpness, is_sharp_enough
 
 logger = setup_logging(__name__)
 

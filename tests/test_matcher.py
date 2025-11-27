@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from app.matcher_faiss import FaissMatcher
+from app.backends.insightface.matcher import FaissMatcher
 
 
 @pytest.fixture

@@ -9,8 +9,8 @@ from unittest.mock import Mock
 import numpy as np
 import pytest
 
-from app.enrollment import EnrollmentService
-from app.interfaces import BBox, Detection
+from app.services.enrollment import EnrollmentService
+from app.core.interfaces import BBox, Detection
 
 
 @pytest.fixture

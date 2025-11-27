@@ -21,8 +21,8 @@ import numpy as np
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.logging_config import setup_logging
-from app.matcher_faiss import FaissMatcher
+from app.core.logging_config import setup_logging
+from app.backends.insightface.matcher import FaissMatcher
 
 logger = setup_logging(__name__)
 

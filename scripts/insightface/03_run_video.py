@@ -4,9 +4,16 @@
 This script runs face recognition on a video file and optionally
 saves the annotated output.
 
+Supports multiple backends:
+- insightface (default): SCRFD + ArcFace + FAISS
+- dlib: HOG/CNN + ResNet-34 + Euclidean distance
+
 Usage:
     python scripts/run_video.py --video path/to/video.mp4
     python scripts/run_video.py --video input.mp4 --output output.mp4 --threshold 0.4
+
+    # Using dlib backend
+    python scripts/run_video.py --video input.mp4 --backend dlib
 """
 
 from __future__ import annotations
@@ -21,15 +28,12 @@ import cv2
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.aligner_fivept import FivePointAligner
-from app.config import Config
-from app.detector_scrfd import SCRFDDetector
-from app.embedder_arcface import ArcFaceEmbedder
-from app.logging_config import setup_logging
-from app.matcher_faiss import FaissMatcher
-from app.overlay import draw_bbox, draw_label, draw_fps
-from app.recognition import RecognitionService
-from app.video_io import VideoFileSource
+from app.backends import create_backend, get_model_paths, load_matcher
+from app.core.config import Config
+from app.core.logging_config import setup_logging
+from app.core.overlay import draw_bbox, draw_label, draw_fps
+from app.services.recognition import RecognitionService
+from app.core.video_io import VideoFileSource
 
 logger = setup_logging(__name__)
 
@@ -82,6 +86,24 @@ def parse_args() -> argparse.Namespace:
         help="Process every Nth frame (1=all frames, 2=every other frame, etc.)",
     )
 
+    # Backend selection
+    parser.add_argument(
+        "--backend",
+        type=str,
+        choices=["insightface", "dlib"],
+        default="insightface",
+        help="Face recognition backend to use",
+    )
+
+    # dlib-specific options
+    parser.add_argument(
+        "--detector-model",
+        type=str,
+        choices=["hog", "cnn"],
+        default="hog",
+        help="Detector model for dlib backend (hog=faster, cnn=more accurate)",
+    )
+
     return parser.parse_args()
 
 
@@ -97,12 +119,15 @@ def main() -> None:
     """Main function."""
     args = parse_args()
 
-    print_section("Face Recognition - Video File")
+    print_section(f"Face Recognition - {args.backend.upper()} Backend")
+    print(f"Backend:       {args.backend}")
     print(f"Input video:   {args.video}")
     print(f"Output video:  {args.output or 'None (no save)'}")
     print(f"Models dir:    {args.models_dir}")
     print(f"Display:       {'No (headless)' if args.no_display else 'Yes'}")
     print(f"Skip frames:   {args.skip_frames}")
+    if args.backend == "dlib":
+        print(f"Detector:      {args.detector_model}")
     print()
 
     # Load config
@@ -118,45 +143,48 @@ def main() -> None:
     print_section("Step 1: Loading Models and Index")
 
     models_dir = Path(args.models_dir)
-    index_path = models_dir / "centroids.faiss"
-    labels_path = models_dir / "labels.json"
+    paths = get_model_paths(args.backend, models_dir)
 
-    if not index_path.exists() or not labels_path.exists():
-        logger.error(f"FAISS index not found in {models_dir}")
-        print("Error: FAISS index not found")
+    if not paths["index"].exists():
+        logger.error(f"Index not found in {models_dir}")
+        print(f"Error: {args.backend} index not found")
         print()
-        print("Please build the index first:")
-        print("  1. Capture enrollment images:")
-        print("     python scripts/capture_enroll.py --name YOURNAME --num-images 15")
-        print("  2. Build FAISS index:")
-        print("     python scripts/build_index.py")
+        if args.backend == "insightface":
+            print("Please build the index first:")
+            print("  1. Capture enrollment images:")
+            print("     python scripts/capture_enroll.py --name YOURNAME --num-images 15")
+            print("  2. Build FAISS index:")
+            print("     python scripts/build_index.py")
+        else:  # dlib
+            print("Please encode faces first (PyImageSearch approach):")
+            print("  python scripts/encode_faces.py --dataset data/dataset")
         return
 
-    print("Loading detector (SCRFD)...")
-    detector = SCRFDDetector(config)
-    print("Detector loaded")
+    print(f"Creating {args.backend} backend...")
+    components = create_backend(
+        backend_type=args.backend,
+        config=config,
+        detector_model=args.detector_model,
+    )
+    print(f"Detector loaded: {components.detector}")
+    if components.aligner:
+        print(f"Aligner loaded: {components.aligner}")
+    print(f"Embedder loaded: {components.embedder}")
 
-    print("Loading aligner (5-point)...")
-    aligner = FivePointAligner()
-    print("Aligner loaded")
-
-    print("Loading embedder (ArcFace)...")
-    embedder = ArcFaceEmbedder(config)
-    print("Embedder loaded")
-
-    print("Loading FAISS index...")
-    matcher = FaissMatcher(dimension=512)
-    matcher.load(index_path, labels_path)
-    print(f"FAISS index loaded: {len(matcher.labels)} persons enrolled")
-    print(f"  Enrolled persons: {', '.join(matcher.labels)}")
+    print(f"Loading {args.backend} index...")
+    matcher = load_matcher(args.backend, models_dir)
+    labels = matcher.names if hasattr(matcher, 'names') else matcher.labels
+    unique_labels = sorted(set(labels))
+    print(f"Index loaded: {len(unique_labels)} persons enrolled")
+    print(f"  Enrolled persons: {', '.join(unique_labels)}")
 
     # Step 2: Initialize recognition service
     print_section("Step 2: Initializing Recognition Service")
 
     service = RecognitionService(
-        detector=detector,
-        aligner=aligner,
-        embedder=embedder,
+        detector=components.detector,
+        aligner=components.aligner,
+        embedder=components.embedder,
         matcher=matcher,
         threshold=threshold,
     )

@@ -20,14 +20,14 @@ import cv2
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.aligner_fivept import FivePointAligner
-from app.config import Config
-from app.detector_scrfd import SCRFDDetector
-from app.embedder_arcface import ArcFaceEmbedder
-from app.logging_config import setup_logging
-from app.matcher_faiss import FaissMatcher
-from app.overlay import draw_bbox, draw_label
-from app.recognition import RecognitionService
+from app.backends.insightface.aligner import FivePointAligner
+from app.core.config import Config
+from app.backends.insightface.detector import SCRFDDetector
+from app.backends.insightface.embedder import ArcFaceEmbedder
+from app.core.logging_config import setup_logging
+from app.backends.insightface.matcher import FaissMatcher
+from app.core.overlay import draw_bbox, draw_label
+from app.services.recognition import RecognitionService
 
 logger = setup_logging(__name__)
 

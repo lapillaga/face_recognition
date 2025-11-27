@@ -9,8 +9,8 @@ from __future__ import annotations
 import numpy as np
 from insightface.app import FaceAnalysis
 
-from app.config import Config
-from app.logging_config import get_logger
+from app.core.config import Config
+from app.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 

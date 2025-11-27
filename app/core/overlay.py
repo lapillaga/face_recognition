@@ -11,7 +11,7 @@ from typing import List, Optional, Tuple
 import cv2
 import numpy as np
 
-from app.interfaces import BBox, Detection
+from app.core.interfaces import BBox, Detection
 
 
 # Color palette (BGR format for OpenCV)

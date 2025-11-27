@@ -12,9 +12,9 @@ import cv2
 import numpy as np
 from insightface.app import FaceAnalysis
 
-from app.config import Config
-from app.interfaces import BBox, Detection
-from app.logging_config import get_logger
+from app.core.config import Config
+from app.core.interfaces import BBox, Detection
+from app.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -31,7 +31,7 @@ class SCRFDDetector:
         det_size: Detection input size (default: (640, 640))
 
     Example:
-        >>> from app.config import get_config
+        >>> from app.core.config import get_config
         >>> config = get_config()
         >>> detector = SCRFDDetector(config)
         >>> detections = detector.detect(frame)
