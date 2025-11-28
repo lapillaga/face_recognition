@@ -1,0 +1,134 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="#555" />
+    </marker>
+  </defs>
+
+  <g transform="translate(20, 50)">
+    <rect x="0" y="0" width="160" height="180" rx="15" ry="15" fill="#DCE6F2" stroke="#A0B0C0" stroke-width="2"/>
+    <g transform="translate(30, 40) scale(0.8)">
+      <rect x="10" y="10" width="80" height="60" rx="5" fill="#fff" stroke="#555" stroke-width="2"/>
+      <circle cx="50" cy="40" r="20" fill="#fff" stroke="#555" stroke-width="2"/>
+      <circle cx="50" cy="40" r="10" fill="#555"/>
+      <rect x="65" y="0" width="20" height="10" fill="#555"/>
+      <rect x="-5" y="-5" width="70" height="50" rx="2" fill="#fff" stroke="#555" stroke-width="1" transform="rotate(-10)"/>
+      <rect x="5" y="-10" width="70" height="50" rx="2" fill="#fff" stroke="#555" stroke-width="1" transform="rotate(5)"/>
+    </g>
+    <text x="80" y="160" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Imagen de Entrada</text>
+  </g>
+
+  <path d="M180,140 L220,140" stroke="#777" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <g transform="translate(220, 50)">
+    <rect x="0" y="0" width="160" height="180" rx="15" ry="15" fill="#FCE4D6" stroke="#E0A080" stroke-width="2"/>
+    <g transform="translate(40, 30) scale(0.8)">
+      <circle cx="50" cy="50" r="40" fill="none" stroke="#555" stroke-width="2"/>
+      <circle cx="35" cy="40" r="3" fill="#555"/>
+      <circle cx="65" cy="40" r="3" fill="#555"/>
+      <circle cx="50" cy="55" r="3" fill="#555"/>
+      <circle cx="35" cy="70" r="3" fill="#555"/>
+      <circle cx="65" cy="70" r="3" fill="#555"/>
+      <circle cx="75" cy="35" r="25" fill="rgba(255,255,255,0.5)" stroke="#555" stroke-width="2"/>
+      <line x1="95" y1="55" x2="115" y2="75" stroke="#555" stroke-width="4"/>
+    </g>
+    <text x="80" y="150" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">1. Detector (SCRFD)</text>
+    <text x="80" y="170" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#555">(Localización y Puntos Clave)</text>
+  </g>
+
+  <path d="M380,140 L420,140" stroke="#777" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <g transform="translate(420, 50)">
+    <rect x="0" y="0" width="160" height="180" rx="15" ry="15" fill="#FCE4D6" stroke="#E0A080" stroke-width="2"/>
+    <g transform="translate(20, 40) scale(0.7)">
+      <g transform="rotate(-15)">
+        <rect x="0" y="0" width="60" height="70" fill="#fff" stroke="#555" stroke-width="1"/>
+        <circle cx="30" cy="30" r="20" fill="none" stroke="#555" stroke-width="1"/>
+        <circle cx="20" cy="25" r="2" fill="#555"/>
+        <circle cx="40" cy="25" r="2" fill="#555"/>
+      </g>
+      <path d="M70,35 L100,35" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <g transform="translate(110, 0)">
+        <rect x="0" y="0" width="60" height="70" fill="#fff" stroke="#555" stroke-width="1"/>
+        <circle cx="30" cy="30" r="20" fill="none" stroke="#555" stroke-width="1"/>
+        <circle cx="20" cy="25" r="2" fill="#555"/>
+        <circle cx="40" cy="25" r="2" fill="#555"/>
+      </g>
+    </g>
+    <text x="80" y="150" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">2. Aligner</text>
+    <text x="80" y="170" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#555">(Normalización 112x112)</text>
+  </g>
+
+  <path d="M580,140 L620,140" stroke="#777" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <g transform="translate(620, 50)">
+    <rect x="0" y="0" width="160" height="180" rx="15" ry="15" fill="#D0F0C0" stroke="#A0D0A0" stroke-width="2"/>
+    <g transform="translate(20, 40) scale(0.7)">
+      <rect x="0" y="20" width="40" height="40" fill="#fff" stroke="#555" stroke-width="1"/>
+      <circle cx="20" cy="35" r="10" fill="none" stroke="#555" stroke-width="1"/>
+      <path d="M45,40 L65,40" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <g transform="translate(70, 10)">
+        <circle cx="10" cy="10" r="5" fill="#555"/>
+        <circle cx="10" cy="40" r="5" fill="#555"/>
+        <circle cx="10" cy="70" r="5" fill="#555"/>
+        <circle cx="40" cy="25" r="5" fill="#555"/>
+        <circle cx="40" cy="55" r="5" fill="#555"/>
+        <circle cx="70" cy="40" r="5" fill="#555"/>
+        <line x1="10" y1="10" x2="40" y2="25" stroke="#555" stroke-width="1"/>
+        <line x1="10" y1="40" x2="40" y2="25" stroke="#555" stroke-width="1"/>
+        <line x1="10" y1="40" x2="40" y2="55" stroke="#555" stroke-width="1"/>
+        <line x1="10" y1="70" x2="40" y2="55" stroke="#555" stroke-width="1"/>
+        <line x1="40" y1="25" x2="70" y2="40" stroke="#555" stroke-width="1"/>
+        <line x1="40" y1="55" x2="70" y2="40" stroke="#555" stroke-width="1"/>
+      </g>
+      <path d="M145,40 L165,40" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+      <rect x="170" y="10" width="20" height="60" fill="#fff" stroke="#555" stroke-width="1"/>
+      <line x1="175" y1="20" x2="185" y2="20" stroke="#555" stroke-width="2"/>
+      <line x1="175" y1="30" x2="185" y2="30" stroke="#555" stroke-width="2"/>
+      <line x1="175" y1="40" x2="185" y2="40" stroke="#555" stroke-width="2"/>
+      <line x1="175" y1="50" x2="185" y2="50" stroke="#555" stroke-width="2"/>
+      <line x1="175" y1="60" x2="185" y2="60" stroke="#555" stroke-width="2"/>
+    </g>
+    <text x="80" y="150" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">3. Embedder (ArcFace)</text>
+    <text x="80" y="170" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#555">(Vector 512D)</text>
+  </g>
+
+  <path d="M780,140 L820,140" stroke="#777" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <g transform="translate(820, 50)">
+    <rect x="0" y="0" width="160" height="180" rx="15" ry="15" fill="#E6E0F8" stroke="#C0B0E0" stroke-width="2"/>
+    <g transform="translate(30, 30) scale(0.8)">
+      <ellipse cx="40" cy="20" rx="40" ry="10" fill="#fff" stroke="#555" stroke-width="2"/>
+      <path d="M0,20 v60 a40,10 0 0,0 80,0 v-60" fill="#fff" stroke="#555" stroke-width="2"/>
+      <ellipse cx="40" cy="40" rx="40" ry="10" fill="none" stroke="#555" stroke-width="2"/>
+      <ellipse cx="40" cy="60" rx="40" ry="10" fill="none" stroke="#555" stroke-width="2"/>
+      <circle cx="80" cy="40" r="30" fill="rgba(255,255,255,0.5)" stroke="#555" stroke-width="2"/>
+      <line x1="105" y1="60" x2="130" y2="85" stroke="#555" stroke-width="4"/>
+      <rect x="140" y="20" width="30" height="50" fill="#fff" stroke="#555" stroke-width="1"/>
+      <line x1="145" y1="30" x2="165" y2="30" stroke="#555" stroke-width="2"/>
+      <line x1="145" y1="40" x2="165" y2="40" stroke="#555" stroke-width="2"/>
+      <line x1="145" y1="50" x2="165" y2="50" stroke="#555" stroke-width="2"/>
+    </g>
+    <text x="80" y="150" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">4. Matcher (FAISS)</text>
+    <text x="80" y="170" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#555">(Búsqueda por Similitud)</text>
+  </g>
+
+  <path d="M980,140 L1020,140" stroke="#777" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <g transform="translate(1020, 50)">
+    <rect x="0" y="0" width="160" height="180" rx="15" ry="15" fill="#D0F0C0" stroke="#A0D0A0" stroke-width="2"/>
+    <g transform="translate(30, 40) scale(0.8)">
+      <rect x="0" y="0" width="100" height="70" rx="5" fill="#fff" stroke="#555" stroke-width="2"/>
+      <circle cx="50" cy="5" r="5" fill="#fff" stroke="#555" stroke-width="2"/>
+      <rect x="10" y="15" width="35" height="45" fill="#ddd" stroke="#555" stroke-width="1"/>
+      <circle cx="27.5" cy="30" r="10" fill="#555"/>
+      <path d="M17.5,60 a20,20 0 0,1 20,0" fill="#555"/>
+      <text x="55" y="25" font-family="Arial, sans-serif" font-size="10" fill="#333">Nombre:</text>
+      <text x="55" y="35" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">Luis Antonio</text>
+      <text x="55" y="50" font-family="Arial, sans-serif" font-size="10" fill="#333">Score:</text>
+      <text x="55" y="62" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#008000">98.5%</text>
+    </g>
+    <text x="80" y="150" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Salida</text>
+    <text x="80" y="170" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#555">(Identidad + Score)</text>
+  </g>
+</svg>

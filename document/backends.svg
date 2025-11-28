@@ -1,0 +1,107 @@
+<svg width="900" height="650" viewBox="0 0 900 650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap');
+      .font-base { font-family: 'Roboto', Arial, sans-serif; }
+      .title { font-size: 32px; font-weight: 700; fill: #2c3e50; text-anchor: middle; }
+
+      /* Estilos de tabla */
+      .header-bg { fill: #2c3e50; }
+      .header-text { font-size: 18px; font-weight: 700; fill: #ffffff; text-anchor: middle; dominant-baseline: middle; }
+      .row-odd { fill: #ffffff; stroke: #e0e0e0; stroke-width: 0.5px; }
+      .row-even { fill: #f4f6f7; stroke: #e0e0e0; stroke-width: 0.5px; }
+
+      /* Textos de celdas */
+      .cell-label { font-size: 16px; font-weight: 700; fill: #34495e; text-anchor: start; dominant-baseline: middle; }
+      .cell-data { font-size: 16px; font-weight: 400; fill: #555555; text-anchor: middle; dominant-baseline: middle; }
+
+      /* Estilos del footer */
+      .summary-box { rx: 12; ry: 12; stroke-width: 2px; }
+      .summary-text { font-size: 18px; font-weight: 700; dominant-baseline: middle; }
+      .summary-sub { font-size: 14px; font-weight: 400; dominant-baseline: middle; }
+    </style>
+    <filter id="softShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <g transform="translate(50, 100)" class="font-base">
+
+    <g>
+      <rect x="0" y="0" width="800" height="60" rx="8" ry="8" class="header-bg" filter="url(#softShadow)"/>
+      <text x="130" y="30" class="header-text" text-anchor="start">Característica</text>
+      <text x="400" y="30" class="header-text">InsightFace</text>
+      <text x="650" y="30" class="header-text">dlib</text>
+    </g>
+
+    <g transform="translate(0, 70)">
+      <rect x="0" y="0" width="800" height="50" class="row-odd"/>
+      <text x="20" y="25" class="cell-label">Detector</text>
+      <text x="400" y="25" class="cell-data">SCRFD</text>
+      <text x="650" y="25" class="cell-data">HOG / CNN</text>
+    </g>
+
+    <g transform="translate(0, 120)">
+      <rect x="0" y="0" width="800" height="50" class="row-even"/>
+      <text x="20" y="25" class="cell-label">Embedder</text>
+      <text x="400" y="25" class="cell-data">ArcFace</text>
+      <text x="650" y="25" class="cell-data">ResNet-34</text>
+    </g>
+
+    <g transform="translate(0, 170)">
+      <rect x="0" y="0" width="800" height="50" class="row-odd"/>
+      <text x="20" y="25" class="cell-label">Dimensión embedding</text>
+      <text x="400" y="25" class="cell-data">512-D</text>
+      <text x="650" y="25" class="cell-data">128-D</text>
+    </g>
+
+    <g transform="translate(0, 220)">
+      <rect x="0" y="0" width="800" height="50" class="row-even"/>
+      <text x="20" y="25" class="cell-label">Matcher</text>
+      <text x="400" y="25" class="cell-data">FAISS (coseno)</text>
+      <text x="650" y="25" class="cell-data">Distancia Euclidiana</text>
+    </g>
+
+    <g transform="translate(0, 270)">
+      <rect x="0" y="0" width="800" height="50" class="row-odd"/>
+      <text x="20" y="25" class="cell-label">Velocidad (aprox.)</text>
+      <text x="400" y="25" class="cell-data">12-15 FPS</text>
+      <text x="650" y="25" class="cell-data" font-weight="700" fill="#27ae60">18-22 FPS</text>
+    </g>
+
+    <g transform="translate(0, 320)">
+      <rect x="0" y="0" width="800" height="50" class="row-even"/>
+      <text x="20" y="25" class="cell-label">Precisión</text>
+      <text x="400" y="25" class="cell-data" font-weight="700" fill="#2980b9">Mayor</text>
+      <text x="650" y="25" class="cell-data">Buena</text>
+    </g>
+
+    <g transform="translate(0, 370)">
+      <path d="M0,0 H800 V42 A8,8 0 0,1 792,50 H8 A8,8 0 0,1 0,42 Z" class="row-odd"/>
+      <text x="20" y="25" class="cell-label">Uso Recomendado</text>
+      <text x="400" y="25" class="cell-data">Producción</text>
+      <text x="650" y="25" class="cell-data">Educativo / Prototipo</text>
+    </g>
+  </g>
+
+  <g transform="translate(50, 550)" class="font-base">
+    <g transform="translate(0, 0)">
+      <rect class="summary-box" width="380" height="70" fill="#E8F5E9" stroke="#2E7D32" filter="url(#softShadow)"/>
+      <text x="30" y="25" class="summary-text" fill="#2E7D32">InsightFace = Más preciso</text>
+      <text x="30" y="50" class="summary-sub" fill="#1B5E20">(Utiliza modelos más grandes y complejos)</text>
+      <circle cx="350" cy="35" r="15" fill="#2E7D32"/>
+      <path d="M342,35 L348,41 L358,31" stroke="#fff" stroke-width="3" fill="none"/>
+    </g>
+
+    <g transform="translate(420, 0)">
+      <rect class="summary-box" width="380" height="70" fill="#E3F2FD" stroke="#1565C0" filter="url(#softShadow)"/>
+      <text x="30" y="25" class="summary-text" fill="#1565C0">dlib = Más rápido y fácil</text>
+      <text x="30" y="50" class="summary-sub" fill="#0D47A1">(Ideal para aprendizaje y prototipado rápido)</text>
+      <circle cx="350" cy="35" r="15" fill="#1565C0"/>
+      <path d="M352,25 L342,38 L350,38 L348,50 L358,35 L350,35 Z" fill="#fff"/>
+    </g>
+  </g>
+</svg>
